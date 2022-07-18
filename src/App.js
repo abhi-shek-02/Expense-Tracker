@@ -1,40 +1,49 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react'
-import ListRender from './ListRender'
-
-
-
 
 function App() {
   const [total, setTotal] = useState(0)
   const [expense, setexpense] = useState(0)
+  const [income, setincome] = useState(0)
+
+
+  const [amount, setAmount] = useState(0)
   const [date, setDate] = useState()
   const [valx, setValx] = useState()
-
-  const [income, setincome] = useState(0)
-  const [amount, setAmount] = useState(0)
   const [list, setList] = useState([])
-  
+  const [OBlist, setOBList] = useState({})
+
+
   const storeAmount = (e) => {
-    setAmount(e.target.value, console.log("Amount: ", amount))
+    setAmount(e.target.value)
   }
   const storeDate = (e) => {
-    setDate(e.target.value, console.log("Date: ", date))
+    setDate(e.target.value)
   }
   const storevalue = (e) => {
-    setValx(e.target.value, console.log("Valx: ", valx))
+    setValx(e.target.value)
   }
+
   const SetMainData = () => {
-    console.log("Button Clicked")
-    setList({
-      ...list,
+    console.log("Button Clicked", valx, amount)
+    if (valx === "incomes") {
+      setTotal(parseInt(income) + parseInt(expense))
+      setincome(parseInt(income) + parseInt(amount))
+    }
+    else if (valx === "expenses") {
+      setexpense(parseInt(expense) - parseInt(amount))
+      setTotal(parseInt(income) + parseInt(expense))
+    }
+
+    setOBList({
       amount: amount,
       date: date,
       valx: valx
     })
+    setList([...list, OBlist]);
+    console.log(list)
   }
-  console.log(list)
 
 
 
@@ -45,11 +54,10 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <h2>EXPENSE TRACKER</h2>
       </header>
-
       <div className="main-cont">
 
         <div className="bal">
-          <h1>Total Balance : 1000</h1>
+          <h1>Total Balance : {total}</h1>
         </div>
         <div className="show-bals">
           <div className="show-bals1">
@@ -77,8 +85,9 @@ function App() {
 
           <div className="same2">
             <h3>Enter Category</h3>
-            <select name="cars" className="input" onClick={(value) => { storevalue(value) }}>
-              <option value="income">INCOME</option>
+            <select className="input" onClick={(value) => { storevalue(value) }}>
+              <option value="" disabled>--Please choose </option>
+              <option value="incomes">INCOME</option>
               <option value="expenses">EXPENSES</option>
             </select>
           </div>
@@ -88,7 +97,15 @@ function App() {
       <div className="render-list">
         <h2>ALL TRANSECTION</h2>
         <div className="line"></div>
-        
+        {
+          list?.map((item) => {
+            <div className="list-main">
+              <div className="same3">{item.date}</div>
+              <div className="same3">{item.amount}</div>
+              <div className="same3">{item.type}</div>
+            </div>
+          })
+        }
       </div>
     </div>
   );
